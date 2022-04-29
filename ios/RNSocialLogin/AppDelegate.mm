@@ -1,11 +1,11 @@
 #import "AppDelegate.h"
-
+#import "GoogleSignIn.h"
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
 #import <React/RCTAppSetupUtils.h>
-
+#import <React/RCTLog.h>
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -48,7 +48,18 @@
   } else {
     rootView.backgroundColor = [UIColor whiteColor];
   }
-
+  
+  [GIDSignIn.sharedInstance restorePreviousSignInWithCallback:^(GIDGoogleUser * _Nullable user,
+                                                                NSError * _Nullable error) {
+    if (error) {
+      RCTLogInfo(@"Not logged in");
+      // Show the app's signed-out state.
+    } else {
+      RCTLogInfo(@"Logged in");
+      // Show the app's signed-in state.
+    }
+  }];
+  
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
@@ -104,5 +115,23 @@
 }
 
 #endif
+
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+  BOOL handled;
+
+  handled = [GIDSignIn.sharedInstance handleURL:url];
+  if (handled) {
+    RCTLogInfo(@"handled");
+    return YES;
+  }
+  RCTLogInfo(@"Unhandled");
+  // Handle other custom URL types.
+
+  // If not handled by this app, return NO.
+  return NO;
+}
+
 
 @end

@@ -10,6 +10,7 @@
 
 import React from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -19,6 +20,8 @@ import {
   View,
 } from 'react-native';
 
+import SocialLoginInterface from './NativeSocialLogin'
+
 import {
   Colors,
   DebugInstructions,
@@ -26,6 +29,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
 
 const Section: React.FC<{
   title: string;
@@ -62,6 +66,16 @@ const App = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+
+  const handleGoogleLogin = async () => {
+    console.log("Google login clicked")
+    // SocialLogin.performGoogleLogin("","");
+    console.log(SocialLoginInterface)
+    const eventId = await SocialLoginInterface.performGoogleLogin("", "");
+
+    console.log(eventId);
+  }
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
@@ -73,6 +87,7 @@ const App = () => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
+            <Button title='Google login' onPress={() => handleGoogleLogin()}/>
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
