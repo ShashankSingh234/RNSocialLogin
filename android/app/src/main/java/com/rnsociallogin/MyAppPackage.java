@@ -19,7 +19,7 @@ public class MyAppPackage implements ReactPackage {
             ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-        modules.add(new SocialLogin(reactContext));
+        modules.add(new GoogleLoginModule(reactContext));
 
         return modules;
     }
